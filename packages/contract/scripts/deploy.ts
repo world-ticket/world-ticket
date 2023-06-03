@@ -1,24 +1,24 @@
-import { ethers } from "hardhat";
+import { ethers } from 'hardhat'
+
 
 async function main() {
-  const currentTimestampInSeconds = Math.round(Date.now() / 1000);
-  const unlockTime = currentTimestampInSeconds + 60;
+    const worldIDAddress = "";
+    const APP_ID = ""
+    const ACTION_ID = ""
+    
+    if(!APP_ID || !ACTION_ID || !worldIDAddress) {
+        throw new Error("Missing env variables")
+    }
 
-  const lockedAmount = ethers.utils.parseEther("0.001");
+    const ContractFactory = await ethers.getContractFactory('WorldTicket')
+    const contract = await ContractFactory.deploy(worldIDAddress, APP_ID, ACTION_ID)
 
-  const Lock = await ethers.getContractFactory("Lock");
-  const lock = await Lock.deploy(unlockTime, { value: lockedAmount });
+    await contract.deployed()
 
-  await lock.deployed();
-
-  console.log(
-    `Lock with ${ethers.utils.formatEther(lockedAmount)}ETH and unlock timestamp ${unlockTime} deployed to ${lock.address}`
-  );
+    console.log('Contract deployed to:', contract.address)
 }
 
-// We recommend this pattern to be able to use async/await everywhere
-// and properly handle errors.
-main().catch((error) => {
-  console.error(error);
-  process.exitCode = 1;
-});
+main().catch(error => {
+    console.error(error)
+    process.exitCode = 1
+})
