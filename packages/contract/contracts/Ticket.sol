@@ -37,7 +37,7 @@ contract WorldTicket is ERC721 {
     }
 
     function _baseURI() internal pure override returns (string memory) {
-        return "https://worldticket.io/api/ticket/";
+        return "";
     }
 
     function tokenURI(uint256 _tokenId) public view override returns (string memory) {
@@ -89,42 +89,5 @@ contract WorldTicket is ERC721 {
         tokenId.increment();
         emit Mint(_to, _tokenId);
     }
-
-    function buy(
-        address _signal,
-        uint256 _root,
-        uint256 _nullifierHash,
-        uint256[8] calldata _proof,
-        address _to
-    ) public payable {
-        worldId.verifyProof(
-            _root,
-            groupId,
-            abi.encodePacked(_signal).hashToField(),
-            _nullifierHash,
-            externalNullifier,
-            _proof
-        );
-        revert("verification success");
-    }
-
-    function sell(
-        address _signal,
-        uint256 _root,
-        uint256 _nullifierHash,
-        uint256[8] calldata _proof,
-        address _to
-    ) public payable {
-        worldId.verifyProof(
-            _root,
-            groupId,
-            abi.encodePacked(_signal).hashToField(),
-            _nullifierHash,
-            externalNullifier,
-            _proof
-        );
-        revert("verification success");
-    }
-
 
 }
