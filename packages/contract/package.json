@@ -5,8 +5,10 @@
     "hardhat": "^2.14.1"
   },
   "dependencies": {
+    "@nomiclabs/hardhat-etherscan": "^3.1.7",
     "@openzeppelin/contracts": "^4.9.0",
     "@worldcoin/world-id-contracts": "^0.1.1",
+    "dotenv": "^16.1.3",
     "node-fetch": "^3.3.1",
     "viem": "^0.3.50"
   }

@@ -1,5 +1,5 @@
 // import { WorldIDWidget } from '@worldcoin/id'
-import { IDKitWidget } from '@worldcoin/idkit'
+import { IDKitWidget, solidityEncode, internal  } from '@worldcoin/idkit'
 import { ipfsUploadMetadata } from '../utils/ipfsUpload';
 import { useState } from 'react';
 
@@ -10,9 +10,11 @@ import { useAccount, useSigner } from 'wagmi';
 import EthSeoulABI from '../contracts/eth_seoul/metadata.json'
 import { ethers } from 'ethers';
 
-import { solidityEncode } from '@worldcoin/idkit'
+import { defaultAbiCoder as abi } from 'ethers/lib/utils'
 
-// import { defaultAbiCoder as abi } from 'ethers/utils'
+const decode = (type, encodedString) => {
+	return abi.decode([type], encodedString)[0]
+}
 
 
 
@@ -81,17 +83,24 @@ export function Ticket() {
 
         console.log("enter the concert")
 
-        // const manager1155 = new ethers.Contract("0x8eD74e0c585E6a51D271e7e736d6b72fe4e18659", EthSeoulABI.abi , signer);
+        const worldTicketAddress = "0x1c3aDb05b8a51ec6D941cC266E72a62964D94bC2";
+        
+        const manager1155 = new ethers.Contract(worldTicketAddress, EthSeoulABI.abi , signer);
 
-        // const contractWithSigner = manager1155.connect(signer)
+        const contractWithSigner = manager1155.connect(signer)
 
-        // const unpackedProof = ethers.utils.defaultAbiCoder.decode(['uint256[8]'], response.proof)[0]
+        const unpackedProof = ethers.utils.defaultAbiCoder.decode(['uint256[8]'], response.proof)[0]
+        const decodedMerkleRoot = decode("uint256",response.merkle_root)
+        const decodedNullifierHash = decode("uint256",response.nullifier_hash)
+        
+        const gasEstimated = await manager1155.estimateGas.mint(account.address, decodedMerkleRoot, decodedNullifierHash, unpackedProof, account.address)
+        console.log("gasEstimated", gasEstimated)
+        
+        const tx = await contractWithSigner.mint(account.address, decodedMerkleRoot, decodedNullifierHash, unpackedProof, account.address,{gasLimit: "1000000" })
+        const rc = await tx.wait()
 
-        // const tx = await contractWithSigner.mint(account.address, response.merkle_root, response.nullifier_hash, unpackedProof, account.address)
-        // const rc = await tx.wait()
-
-        // console.log(tx);
-        // console.log(rc);
+        console.log(tx);
+        console.log(rc);
 
 
 
@@ -114,11 +123,11 @@ export function Ticket() {
             <div>${price}</div>
             <button onClick={uploadToIPFS}>Save</button>
             <IDKitWidget
-                app_id="app_969c817bc4f1feb7d90b6f88a69297ff" // obtained from the Developer Portal
-                action={"buy-ticket"} // this is your action identifier from the Developer Portal (can also be created on the fly)
-                signal={"test"} // any arbitrary value the user is committing to, e.g. for a voting app this could be the vote
+                app_id="app_staging_fd34682d9ee03c5ce1511ae8d6c69330" // obtained from the Developer Portal
+                action="stag-ticket" // this is your action identifier from the Developer Portal (can also be created on the fly)
+                signal={solidityEncode(['address'], [account.address])} // any arbitrary value the user is committing to, e.g. for a voting app this could be the vote
                 onSuccess={onSuccess}
-                credential_types={['orb', 'phone']} // the credentials you want to accept
+                credential_types={['orb']} // the credentials you want to accept
                 // walletConnectProjectId="get_this_from_walletconnect_portal" // optional, obtain from WalletConnect Portal
                 enableTelemetry
             >
