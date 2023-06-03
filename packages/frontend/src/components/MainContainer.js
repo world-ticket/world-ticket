@@ -20,6 +20,12 @@ export default function Home({ children }) {
         <Box
             component="main"
             sx={{ flexGrow: 1, marginTop: 8, width: { sm: `calc(100% - ${240}px)` } }}
+
+            style={{
+
+                background: "linear-gradient(#F5F5F5,#2A006D)",
+                height: "100vh",
+            }}
         >
             <Container maxWidth="lg">
 

@@ -1,10 +1,10 @@
 // import { WorldIDWidget } from '@worldcoin/id'
-import { IDKitWidget, solidityEncode, internal  } from '@worldcoin/idkit'
+import { IDKitWidget, solidityEncode, internal } from '@worldcoin/idkit'
 import { ipfsUploadMetadata } from '../utils/ipfsUpload';
 import { useState } from 'react';
 
 import Stage from './stage.png'
-import { TextField } from '@mui/material';
+import { Button, Divider, Grid, Paper, TextField } from '@mui/material';
 import { useAccount, useSigner } from 'wagmi';
 
 import EthSeoulABI from '../contracts/eth_seoul/metadata.json'
@@ -12,8 +12,10 @@ import { ethers } from 'ethers';
 
 import { defaultAbiCoder as abi } from 'ethers/lib/utils'
 
+import "./ticket.css"
+
 const decode = (type, encodedString) => {
-	return abi.decode([type], encodedString)[0]
+    return abi.decode([type], encodedString)[0]
 }
 
 
@@ -47,6 +49,8 @@ export function Ticket() {
     console.log("Ticket page loaded")
     const [seatSelection, setSeatSelection] = useState(0);
     const [price, setPrice] = useState(0);
+
+    const [confirmSeat , setConfirmSeat] = useState("")
     // just multiply seatselection with 1000 as a price lol
     // insert number of seat selection as Textfield
 
@@ -75,7 +79,9 @@ export function Ticket() {
 
 
         setTokenURI(tokenURL)
-        setPrice(33 * 1000 / seatSelection);
+        setPrice(Math.floor(33 * 1000 / seatSelection));
+
+        setConfirmSeat(seatSelection)
     }
 
     async function onSuccess(response) {
@@ -84,19 +90,19 @@ export function Ticket() {
         console.log("enter the concert")
 
         const worldTicketAddress = "0x1c3aDb05b8a51ec6D941cC266E72a62964D94bC2";
-        
-        const manager1155 = new ethers.Contract(worldTicketAddress, EthSeoulABI.abi , signer);
+
+        const manager1155 = new ethers.Contract(worldTicketAddress, EthSeoulABI.abi, signer);
 
         const contractWithSigner = manager1155.connect(signer)
 
         const unpackedProof = ethers.utils.defaultAbiCoder.decode(['uint256[8]'], response.proof)[0]
-        const decodedMerkleRoot = decode("uint256",response.merkle_root)
-        const decodedNullifierHash = decode("uint256",response.nullifier_hash)
-        
+        const decodedMerkleRoot = decode("uint256", response.merkle_root)
+        const decodedNullifierHash = decode("uint256", response.nullifier_hash)
+
         const gasEstimated = await manager1155.estimateGas.mint(account.address, decodedMerkleRoot, decodedNullifierHash, unpackedProof, account.address)
         console.log("gasEstimated", gasEstimated)
-        
-        const tx = await contractWithSigner.mint(account.address, decodedMerkleRoot, decodedNullifierHash, unpackedProof, account.address,{gasLimit: "1000000" })
+
+        const tx = await contractWithSigner.mint(account.address, decodedMerkleRoot, decodedNullifierHash, unpackedProof, account.address, { gasLimit: "1000000" })
         const rc = await tx.wait()
 
         console.log(tx);
@@ -109,31 +115,100 @@ export function Ticket() {
     return (
 
 
+        <Grid container spacing={2}>
+            <Grid item lg={8} xs={12}>
+                <img width={500} height={500} src={Stage} alt="stage" />
+            </Grid>
+            <Grid item lg={4} xs={12}>
 
-        <div>
-            <h1>Ticket</h1>
-            <img src={Stage} alt="stage" />
-            <TextField
-                id="seatSelection"
-                label="Filled"
-                variant="filled"
-                value={seatSelection}
-                onChange={handleChange}
-            />
-            <div>${price}</div>
-            <button onClick={uploadToIPFS}>Save</button>
-            <IDKitWidget
-                app_id="app_staging_fd34682d9ee03c5ce1511ae8d6c69330" // obtained from the Developer Portal
-                action="stag-ticket" // this is your action identifier from the Developer Portal (can also be created on the fly)
-                signal={solidityEncode(['address'], [account.address])} // any arbitrary value the user is committing to, e.g. for a voting app this could be the vote
-                onSuccess={onSuccess}
-                credential_types={['orb']} // the credentials you want to accept
-                // walletConnectProjectId="get_this_from_walletconnect_portal" // optional, obtain from WalletConnect Portal
-                enableTelemetry
-            >
-                {({ open }) => <button onClick={open}>Buy a ticket</button>}
-            </IDKitWidget>
-        </div>
+                <div
+                    // elevation={3} 
+                    style={{
+                        padding: 20,
+                        margin: 20,
+                        // opacity: 0.3,
+                        // backgroundColor: "#000000",
+                    }}
+                >
+
+                    <h2>Seat Selection</h2>
+                    <TextField
+                        id="seatSelection"
+                        label="Seat"
+                        variant="outlined"
+                        value={seatSelection}
+                        onChange={handleChange}
+                        fullWidth
+                    />
+                    <div>
+                        <div
+                            style={{
+                                display: "flex",
+                                justifyContent: "space-between",
+                                marginTop: 20
+                            }}
+                        >
+                            <div></div>
+                            <Button
+                                variant="contained"
+                                color='success'
+                                onClick={uploadToIPFS}
+                            >
+                                Enter
+                            </Button>
+                        </div>
+                    </div>
+                    <h2>Your Ticket Price</h2>
+                    <Divider variant="middle" />
+
+                    <div
+                        style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            // marginTop: 20
+                        }}
+                    >
+                        <h2>Sec {confirmSeat}</h2>
+                        <h2>${price}</h2>
+                    </div>
+
+                    <Divider variant="middle" />
+                    <div
+                        style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            marginTop: 20
+                        }}
+                    >
+                        <div></div>
+                        <IDKitWidget
+                            app_id="app_staging_fd34682d9ee03c5ce1511ae8d6c69330" // obtained from the Developer Portal
+                            action="stag-ticket" // this is your action identifier from the Developer Portal (can also be created on the fly)
+                            signal={solidityEncode(['address'], [account.address])} // any arbitrary value the user is committing to, e.g. for a voting app this could be the vote
+                            onSuccess={onSuccess}
+                            credential_types={['orb']} // the credentials you want to accept
+                            // walletConnectProjectId="get_this_from_walletconnect_portal" // optional, obtain from WalletConnect Portal
+                            enableTelemetry
+                        >
+                            {({ open }) => <Button
+                                variant="contained"
+                                color='success'
+                                onClick={open}
+                            >
+                                Buy Now!
+                            </Button>}
+                        </IDKitWidget>
+
+                    </div>
+                </div>
+            </Grid>
+
+        </Grid>
+
+
+
+
+
 
     )
 }
