@@ -50,7 +50,7 @@ export function Ticket() {
     const [seatSelection, setSeatSelection] = useState(0);
     const [price, setPrice] = useState(0);
 
-    const [confirmSeat , setConfirmSeat] = useState("")
+    const [confirmSeat, setConfirmSeat] = useState("")
     // just multiply seatselection with 1000 as a price lol
     // insert number of seat selection as Textfield
 
@@ -117,7 +117,7 @@ export function Ticket() {
 
         <Grid container spacing={2}>
             <Grid item lg={8} xs={12}>
-                <img width={500} height={500} src={Stage} alt="stage" />
+                <img width={600} height={600} src={Stage} alt="stage" />
             </Grid>
             <Grid item lg={4} xs={12}>
 
@@ -138,6 +138,7 @@ export function Ticket() {
                         variant="outlined"
                         value={seatSelection}
                         onChange={handleChange}
+                        color='success'
                         fullWidth
                     />
                     <div>
@@ -153,6 +154,11 @@ export function Ticket() {
                                 variant="contained"
                                 color='success'
                                 onClick={uploadToIPFS}
+                                sx={
+                                    {
+                                        fontWeight: 'bold',
+                                    }
+                                }
                             >
                                 Enter
                             </Button>
@@ -194,6 +200,11 @@ export function Ticket() {
                                 variant="contained"
                                 color='success'
                                 onClick={open}
+                                sx={
+                                    {
+                                        fontWeight: 'bold',
+                                    }
+                                }
                             >
                                 Buy Now!
                             </Button>}

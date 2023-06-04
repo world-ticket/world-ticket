@@ -23,7 +23,7 @@ export default function Home({ children }) {
 
             style={{
 
-                background: "linear-gradient(#F5F5F5,#2A006D)",
+                background: "linear-gradient(#9A01FF,#DB02C6)",
                 height: "100vh",
             }}
         >
