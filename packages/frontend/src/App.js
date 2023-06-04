@@ -1,5 +1,5 @@
 
-import React, { Suspense, lazy, useEffect } from 'react'
+import React, { Suspense, lazy } from 'react'
 
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -7,8 +7,7 @@ import darkTheme from './utils/theme';
 import { Box } from '@mui/material';
 
 
-import { manager1155AddressByChainId, manager1155ABI } from './contracts'
-import { ethers } from 'ethers';
+
 
 
 //test ipad

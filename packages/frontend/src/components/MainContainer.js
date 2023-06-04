@@ -1,7 +1,6 @@
 import React from 'react'
 import { Box } from '@mui/material'
-import { useMinterLabStore } from '../hooks/useMinterLabStore'
-import Loading from './Loading'
+
 import { Container } from '@mui/system'
 
 // interface Props {
@@ -9,12 +8,12 @@ import { Container } from '@mui/system'
 // }
 
 export default function Home({ children }) {
-    const isLoading = useMinterLabStore(state => state.isLoading)
+    // const isLoading = useMinterLabStore(state => state.isLoading)
 
 
-    if (isLoading) {
-        return <Loading />
-    }
+    // if (isLoading) {
+    //     return <Loading />
+    // }
 
     return (
         <Box
