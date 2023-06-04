@@ -7,12 +7,15 @@ import { ManageNFT, CreateNFT, MintingPage, Settings, About, NotFound, MetamaskI
 // console.log(process.env.PUBLIC_URL);
 //basename={process.env.PUBLIC_URL}
 import MyRoutes from './routes'
+
+import Gradient from './components/Gradient'
 export default function Router() {
 
   
 
     return (
         <HashRouter >
+            {/* <Gradient /> */}
             <AppBar />
             <MainContainer>
                 

@@ -25,11 +25,9 @@ const drawerWidth = 240;
 
 const StateMap = {
  
-  'CreateNFT': 0,
-  'ManageNFT': 1,
-  'MintingPage':2,
-  'Settings': 3,
-  '': 4,
+  'Ticket': 0,
+  'Community': 1,
+  '': 2,
 }
 
 
