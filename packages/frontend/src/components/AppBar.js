@@ -11,7 +11,7 @@ import { useLocation } from 'react-router-dom';
 
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 
-
+import Logo from './worldticket_logo_.png'
 const drawerWidth = 240;
 
 // const StateMap = {
@@ -77,6 +77,7 @@ export default function ResponsiveDrawer() {
           {/* <Typography variant="h5" noWrap component="div" sx={{ flexGrow: 1 }}>
             Minter Lab
           </Typography> */}
+          <img src={Logo} alt="logo" width="180" height="30" />
           <Box sx={{ flexGrow: 2 }} >
 
             {/* <CollectionSelect  /> */}
@@ -85,7 +86,7 @@ export default function ResponsiveDrawer() {
 
             
           </Box>
-          <ConnectButton />
+          {/* <ConnectButton /> */}
         </Toolbar>
       </AppBar>
       {/* </Box> */}

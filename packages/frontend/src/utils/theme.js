@@ -5,10 +5,18 @@ const darkTheme = createTheme({
         mode: 'dark',
         // mode: 'light',
         primary: {
-            main: "#FFC0CB"
+            main: "#CCFF06"
         },
         success: {
             main: "#CCFF06"
+        },
+
+        typography: {
+
+            button: { // Here is where you can customise the button
+                fontSize: 16,
+                fontWeight: 1000,
+            },
         },
         // secondary: {
         //     main: "#474d57"

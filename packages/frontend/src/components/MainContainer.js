@@ -1,7 +1,6 @@
 import React from 'react'
 import { Box } from '@mui/material'
-import { useMinterLabStore } from '../hooks/useMinterLabStore'
-import Loading from './Loading'
+
 import { Container } from '@mui/system'
 
 // interface Props {
@@ -9,12 +8,12 @@ import { Container } from '@mui/system'
 // }
 
 export default function Home({ children }) {
-    const isLoading = useMinterLabStore(state => state.isLoading)
+    // const isLoading = useMinterLabStore(state => state.isLoading)
 
 
-    if (isLoading) {
-        return <Loading />
-    }
+    // if (isLoading) {
+    //     return <Loading />
+    // }
 
     return (
         <Box
@@ -23,7 +22,7 @@ export default function Home({ children }) {
 
             style={{
 
-                background: "linear-gradient(#F5F5F5,#2A006D)",
+                background: "linear-gradient(#9A01FF,#DB02C6)",
                 height: "100vh",
             }}
         >
