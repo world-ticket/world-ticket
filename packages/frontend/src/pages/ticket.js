@@ -66,7 +66,7 @@ export function Ticket() {
         const metadataForUpload = {
             name: "Blackpink Eth Seoul",
             description: "Blackpink concert ticket for Eth Seoul",
-            image: "ipfs, cid",
+            image: "https://bafybeihciagprcgx3iotgws5ctawk2a5p53dlowruclnjpg2if2h6whpym.ipfs.nftstorage.link/wolrdticket_logo_icon_design.png",
             seatSelection: seatSelection,
             price: price,
             concertArtist: "BlackPink",
@@ -91,15 +91,15 @@ export function Ticket() {
 
         const worldTicketAddress = "0x1c3aDb05b8a51ec6D941cC266E72a62964D94bC2";
 
-        const manager1155 = new ethers.Contract(worldTicketAddress, EthSeoulABI.abi, signer);
+        const worldTicketContract = new ethers.Contract(worldTicketAddress, EthSeoulABI.abi, signer);
 
-        const contractWithSigner = manager1155.connect(signer)
+        const contractWithSigner = worldTicketContract.connect(signer)
 
         const unpackedProof = ethers.utils.defaultAbiCoder.decode(['uint256[8]'], response.proof)[0]
         const decodedMerkleRoot = decode("uint256", response.merkle_root)
         const decodedNullifierHash = decode("uint256", response.nullifier_hash)
 
-        const gasEstimated = await manager1155.estimateGas.mint(account.address, decodedMerkleRoot, decodedNullifierHash, unpackedProof, account.address)
+        const gasEstimated = await worldTicketContract.estimateGas.mint(account.address, decodedMerkleRoot, decodedNullifierHash, unpackedProof, account.address)
         console.log("gasEstimated", gasEstimated)
 
         const tx = await contractWithSigner.mint(account.address, decodedMerkleRoot, decodedNullifierHash, unpackedProof, account.address, { gasLimit: "1000000" })
